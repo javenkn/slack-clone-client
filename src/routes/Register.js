@@ -1,5 +1,12 @@
 import React, { useState } from 'react';
-import { Container, Header, Input, Button, Message } from 'semantic-ui-react';
+import {
+  Container,
+  Header,
+  Form,
+  Input,
+  Button,
+  Message,
+} from 'semantic-ui-react';
 import { Mutation } from 'react-apollo';
 import { gql } from 'apollo-boost';
 
@@ -51,29 +58,34 @@ export default function Register(props) {
       {(register, { data }) => (
         <Container>
           <Header as='h2'>Register</Header>
-          <Input
-            error={!!usernameError}
-            value={username}
-            onChange={e => setUsername(e.target.value)}
-            placeholder='Username'
-            fluid
-          />
-          <Input
-            error={!!emailError}
-            value={email}
-            onChange={e => setEmail(e.target.value)}
-            placeholder='Email'
-            fluid
-          />
-          <Input
-            error={!!passwordError}
-            value={password}
-            onChange={e => setPassword(e.target.value)}
-            type='password'
-            placeholder='Password'
-            fluid
-          />
-          <Button onClick={e => onSubmit(e, register)}>Submit</Button>
+          <Form>
+            <Form.Field error={!!usernameError}>
+              <Input
+                value={username}
+                onChange={e => setUsername(e.target.value)}
+                placeholder='Username'
+                fluid
+              />
+            </Form.Field>
+            <Form.Field error={!!emailError}>
+              <Input
+                value={email}
+                onChange={e => setEmail(e.target.value)}
+                placeholder='Email'
+                fluid
+              />
+            </Form.Field>
+            <Form.Field error={!!passwordError}>
+              <Input
+                value={password}
+                onChange={e => setPassword(e.target.value)}
+                type='password'
+                placeholder='Password'
+                fluid
+              />
+            </Form.Field>
+            <Button onClick={e => onSubmit(e, register)}>Submit</Button>
+          </Form>
           {usernameError || emailError || passwordError ? (
             <Message
               error

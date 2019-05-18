@@ -31,10 +31,15 @@ export default function CreateTeam(props) {
 
   const onSubmit = async (e, createTeam) => {
     e.preventDefault();
-    const response = await createTeam({
-      variables: { name },
-    });
-    console.log(response);
+    let response = null;
+    try {
+      response = await createTeam({
+        variables: { name },
+      });
+    } catch (error) {
+      props.history.push('/login');
+      return;
+    }
     const { ok, errors } = response.data.createTeam;
     if (ok) {
       props.history.push('/');

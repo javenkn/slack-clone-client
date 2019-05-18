@@ -37,7 +37,7 @@ export default function Login(props) {
     const response = await login({
       variables: { email, password },
     });
-    const { ok, token, refreshToken, errors } = response.data.login;
+    const { ok, token, errors } = response.data.login;
     if (ok) {
       localStorage.setItem('token', token);
       props.history.push('/');

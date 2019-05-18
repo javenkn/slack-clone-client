@@ -15,7 +15,6 @@ const REGISTER_USER = gql`
     login(email: $email, password: $password) {
       ok
       token
-      refreshToken
       errors {
         path
         message
@@ -41,7 +40,6 @@ export default function Login(props) {
     const { ok, token, refreshToken, errors } = response.data.login;
     if (ok) {
       localStorage.setItem('token', token);
-      localStorage.setItem('refreshToken', refreshToken);
       props.history.push('/');
     } else {
       const sortedErrors = errors.reduce(

@@ -41,7 +41,7 @@ export default function TeamList({ teams }) {
     <Wrapper>
       <ul>
         {teams.map((team, i) => (
-          <Team key={`team-${i}`} letter={team.name} />
+          <Team key={`team-${i}`} letter={team.letter} />
         ))}
       </ul>
     </Wrapper>

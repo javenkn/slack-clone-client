@@ -10,7 +10,7 @@ export default function MessageList() {
   return (
     <Wrapper>
       Messages
-      <ul class='message-list'>
+      <ul>
         <li />
         <li />
       </ul>

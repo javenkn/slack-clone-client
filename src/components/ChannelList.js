@@ -1,5 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
+import { Link } from 'react-router-dom';
+
 import Bubble from './Bubble';
 
 const Wrapper = styled.div`
@@ -42,9 +44,19 @@ const DirectMessage = ({ name }) => (
     <Bubble /> {name}
   </ListItemWrapper>
 );
-const Channel = ({ name }) => <ListItemWrapper>#{name}</ListItemWrapper>;
+const Channel = ({ teamId, id, name }) => (
+  <Link to={`/view-team/${teamId}/${id}`}>
+    <ListItemWrapper>#{name}</ListItemWrapper>
+  </Link>
+);
 
-export default function ChannelList({ teamName, username, channels, users }) {
+export default function ChannelList({
+  teamId,
+  teamName,
+  username,
+  channels,
+  users,
+}) {
   return (
     <Wrapper>
       <SectionWrapper>
@@ -57,7 +69,7 @@ export default function ChannelList({ teamName, username, channels, users }) {
         <ul>
           <li>Channels</li>
           {channels.map((channel, i) => (
-            <Channel key={`channel-${i}`} name={channel.name} />
+            <Channel key={`channel-${i}`} {...channel} teamId={teamId} />
           ))}
         </ul>
       </SectionWrapper>

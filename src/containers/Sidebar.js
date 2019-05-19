@@ -19,19 +19,22 @@ const allTeamsQuery = gql`
   }
 `;
 
-export default function Sidebar() {
+export default function Sidebar({ currentTeamId }) {
   return (
     <Query query={allTeamsQuery}>
-      {({ loading, error, data: { allTeams = [] }, currentTeamId }) => {
+      {({ loading, error, data: { allTeams = [] } }) => {
         if (loading) return <p>Loading...</p>;
         if (error) return <p>Error :(</p>;
 
-        const currentTeam = allTeams.find(team => team.id !== currentTeamId);
-        let username = '';
+        // default to first team if no teamId is passed through props
+        const currentTeam = currentTeamId
+          ? allTeams.find(team => team.id === currentTeamId)
+          : allTeams[0];
+        let loggedInUser = '';
         try {
           const token = localStorage.getItem('token');
-          const { user } = decode(token);
-          username = user.username;
+          const { username } = decode(token);
+          loggedInUser = username;
         } catch (error) {}
 
         return (
@@ -43,8 +46,9 @@ export default function Sidebar() {
               }))}
             />
             <ChannelList
+              teamId={currentTeam.id}
               teamName={currentTeam.name}
-              username={username}
+              username={loggedInUser}
               channels={currentTeam.channels}
               users={[{ id: 1, name: 'slackbot' }, { id: 2, name: 'user1' }]}
             />

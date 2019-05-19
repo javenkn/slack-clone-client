@@ -13,10 +13,10 @@ const Layout = styled.div`
   grid-template-rows: auto 1fr auto;
 `;
 
-export default function ViewTeam() {
+export default function ViewTeam({ match: { params } }) {
   return (
     <Layout>
-      <Sidebar currentTeam={4} />
+      <Sidebar currentTeamId={params.teamId} />
       <Header channelName='general' />
       <MessageList />
       <SendMessage channelName='general' />

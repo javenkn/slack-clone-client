@@ -14,6 +14,10 @@ const CREATE_TEAM = gql`
   mutation($name: String!) {
     createTeam(name: $name) {
       ok
+      team {
+        id
+        name
+      }
       errors {
         path
         message
@@ -40,9 +44,9 @@ export default function CreateTeam(props) {
       props.history.push('/login');
       return;
     }
-    const { ok, errors } = response.data.createTeam;
+    const { ok, errors, team } = response.data.createTeam;
     if (ok) {
-      props.history.push('/');
+      props.history.push(`/view-team/${team.id}`);
     } else {
       const sortedErrors = errors.reduce(
         (errObj, { path, message }) => ({

@@ -6,6 +6,6 @@ const Wrapper = styled.div`
   grid-row: 1;
 `;
 
-export default function Header() {
-  return <Wrapper>Header</Wrapper>;
+export default function Header({ channelName }) {
+  return <Wrapper>#{channelName}</Wrapper>;
 }

@@ -5,7 +5,7 @@ import TeamList from '../components/TeamList';
 import ChannelList from '../components/ChannelList';
 import Header from '../components/Header';
 import MessageList from '../components/MessageList';
-import MessageInput from '../components/MessageInput';
+import SendMessage from '../components/SendMessage';
 
 const Layout = styled.div`
   display: grid;
@@ -17,11 +17,16 @@ const Layout = styled.div`
 export default function ViewTeam() {
   return (
     <Layout>
-      <TeamList>Teams</TeamList>
-      <ChannelList />
-      <Header>Header</Header>
+      <TeamList teams={[{ id: 1, name: 'T' }, { id: 2, name: 'H' }]} />
+      <ChannelList
+        teamName='Team Name'
+        username='Username'
+        channels={[{ id: 1, name: 'general' }, { id: 2, name: 'random' }]}
+        users={[{ id: 1, name: 'slackbot' }, { id: 2, name: 'user1' }]}
+      />
+      <Header channelName='general' />
       <MessageList />
-      <MessageInput />
+      <SendMessage channelName='general' />
     </Layout>
   );
 }

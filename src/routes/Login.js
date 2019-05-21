@@ -10,7 +10,7 @@ import {
   Message,
 } from 'semantic-ui-react';
 
-const REGISTER_USER = gql`
+const USER_LOGIN = gql`
   mutation($email: String!, $password: String!) {
     login(email: $email, password: $password) {
       ok
@@ -40,7 +40,7 @@ export default function Login(props) {
     const { ok, token, errors } = response.data.login;
     if (ok) {
       localStorage.setItem('token', token);
-      props.history.push('/');
+      props.history.push('/view-team');
     } else {
       const sortedErrors = errors.reduce(
         (errObj, { path, message }) => ({
@@ -54,7 +54,16 @@ export default function Login(props) {
   };
 
   return (
-    <Mutation mutation={REGISTER_USER}>
+    <Mutation
+      mutation={USER_LOGIN}
+      update={cache => {
+        cache.writeData({
+          data: {
+            isLoggedIn: true,
+          },
+        });
+      }}
+    >
       {(login, { data }) => (
         <Container>
           <Header as='h2'>Login</Header>

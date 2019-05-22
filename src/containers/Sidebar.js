@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Query } from 'react-apollo';
 import { gql } from 'apollo-boost';
 import decode from 'jwt-decode';
 
 import TeamList from '../components/TeamList';
 import ChannelList from '../components/ChannelList';
+import AddChannelModal from '../components/AddChannelModal';
 
 const allTeamsQuery = gql`
   {
@@ -20,6 +21,7 @@ const allTeamsQuery = gql`
 `;
 
 export default function Sidebar({ currentTeamId }) {
+  const [isAddChannelModalOpened, setIsAddChannelModalOpened] = useState(false);
   return (
     <Query query={allTeamsQuery}>
       {({ loading, error, data: { allTeams = [] } }) => {
@@ -51,6 +53,12 @@ export default function Sidebar({ currentTeamId }) {
               username={loggedInUser}
               channels={currentTeam.channels}
               users={[{ id: 1, name: 'slackbot' }, { id: 2, name: 'user1' }]}
+              handleAddChannel={setIsAddChannelModalOpened}
+            />
+            <AddChannelModal
+              teamId={currentTeam.id}
+              isOpened={isAddChannelModalOpened}
+              handleClose={() => setIsAddChannelModalOpened(false)}
             />
           </>
         );

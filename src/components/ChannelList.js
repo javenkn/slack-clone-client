@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
+import { Icon } from 'semantic-ui-react';
 
 import Bubble from './Bubble';
 
@@ -56,6 +57,7 @@ export default function ChannelList({
   username,
   channels,
   users,
+  handleAddChannel,
 }) {
   return (
     <Wrapper>
@@ -67,7 +69,10 @@ export default function ChannelList({
       </SectionWrapper>
       <SectionWrapper>
         <ul>
-          <li>Channels</li>
+          <li>
+            Channels{' '}
+            <Icon name='add circle' onClick={() => handleAddChannel(true)} />
+          </li>
           {channels.map((channel, i) => (
             <Channel key={`channel-${i}`} {...channel} teamId={teamId} />
           ))}

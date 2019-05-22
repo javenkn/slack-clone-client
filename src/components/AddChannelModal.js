@@ -4,9 +4,17 @@ import { Formik } from 'formik';
 import { Mutation } from 'react-apollo';
 import { gql } from 'apollo-boost';
 
+import { allTeamsQuery } from '../graphql/team';
+
 const CREATE_CHANNEL = gql`
   mutation($teamId: ID!, $name: String!) {
-    createChannel(teamId: $teamId, name: $name)
+    createChannel(teamId: $teamId, name: $name) {
+      ok
+      channel {
+        id
+        name
+      }
+    }
   }
 `;
 
@@ -22,6 +30,39 @@ export default function AddChannelModal({ isOpened, handleClose, teamId }) {
               onSubmit={async ({ name }, { setSubmitting }) => {
                 await createChannel({
                   variables: { name, teamId },
+                  optimisticResponse: {
+                    __typename: 'Mutation',
+                    createChannel: {
+                      __typename: 'ChannelResponse',
+                      ok: true,
+                      channel: {
+                        __typename: 'Channel',
+                        id: -1,
+                        name,
+                      },
+                    },
+                  },
+                  update: (proxy, { data: { createChannel } }) => {
+                    const { ok, channel } = createChannel;
+                    if (!ok) return;
+                    // Read the data from our cache for this query.
+                    const data = proxy.readQuery({ query: allTeamsQuery });
+                    // Write our data back to the cache with the new comment in it
+                    proxy.writeQuery({
+                      query: allTeamsQuery,
+                      data: {
+                        ...data,
+                        allTeams: data.allTeams.map(team => {
+                          if (team.id === teamId) {
+                            return {
+                              ...team,
+                              channels: [...team.channels, channel],
+                            };
+                          } else return team;
+                        }),
+                      },
+                    });
+                  },
                 });
                 handleClose();
                 setSubmitting(false);

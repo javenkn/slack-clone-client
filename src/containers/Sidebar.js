@@ -1,24 +1,12 @@
 import React, { useState } from 'react';
 import { Query } from 'react-apollo';
-import { gql } from 'apollo-boost';
 import decode from 'jwt-decode';
+
+import { allTeamsQuery } from '../graphql/team';
 
 import TeamList from '../components/TeamList';
 import ChannelList from '../components/ChannelList';
 import AddChannelModal from '../components/AddChannelModal';
-
-const allTeamsQuery = gql`
-  {
-    allTeams {
-      id
-      name
-      channels {
-        id
-        name
-      }
-    }
-  }
-`;
 
 export default function Sidebar({ currentTeamId }) {
   const [isAddChannelModalOpened, setIsAddChannelModalOpened] = useState(false);

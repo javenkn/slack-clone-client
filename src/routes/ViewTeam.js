@@ -1,5 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
+import { Query } from 'react-apollo';
+
+import { allTeamsQuery } from '../graphql/team';
 
 import Header from '../components/Header';
 import MessageList from '../components/MessageList';
@@ -13,13 +16,40 @@ const Layout = styled.div`
   grid-template-rows: auto 1fr auto;
 `;
 
-export default function ViewTeam({ match: { params } }) {
+export default function ViewTeam({
+  match: {
+    params: { teamId, channelId },
+  },
+}) {
   return (
-    <Layout>
-      <Sidebar currentTeamId={params.teamId} />
-      <Header channelName='general' />
-      <MessageList />
-      <SendMessage channelName='general' />
-    </Layout>
+    <Query query={allTeamsQuery}>
+      {({ loading, error, data: { allTeams = [] } }) => {
+        if (loading) return <p>Loading...</p>;
+        if (error) return <p>Error :(</p>;
+
+        // default to first team if no teamId is passed through props
+        const currentTeam = teamId
+          ? allTeams.find(team => team.id === teamId)
+          : allTeams[0];
+        const currentChannel = !!channelId
+          ? currentTeam.channels.find(channel => channel.id === channelId)
+          : currentTeam.channels[0];
+
+        return (
+          <Layout>
+            <Sidebar
+              team={currentTeam}
+              teams={allTeams.map(team => ({
+                id: team.id,
+                letter: team.name.charAt(0).toUpperCase(),
+              }))}
+            />
+            <Header channelName={currentChannel.name} />
+            <MessageList channelId={currentChannel.id} />
+            <SendMessage channelName={currentChannel.name} />
+          </Layout>
+        );
+      }}
+    </Query>
   );
 }

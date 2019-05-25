@@ -1,15 +1,13 @@
 import React from 'react';
 import { ApolloClient } from 'apollo-client';
 import { ApolloLink } from 'apollo-link';
-import { createHttpLink } from 'apollo-link-http';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import { onError } from 'apollo-link-error';
 import { ApolloProvider } from 'react-apollo';
 import 'semantic-ui-css/semantic.min.css';
 
+import httpLink from './apollo';
 import Routes from './routes';
-
-const httpLink = createHttpLink({ uri: 'http://localhost:3000/graphql' });
 
 const authMiddleware = new ApolloLink((operation, forward) => {
   // get the authentication token from local storage if it exists

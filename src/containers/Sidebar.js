@@ -4,9 +4,11 @@ import decode from 'jwt-decode';
 import TeamList from '../components/TeamList';
 import ChannelList from '../components/ChannelList';
 import AddChannelModal from '../components/AddChannelModal';
+import InvitePeopleModal from '../components/InvitePeopleModal';
 
 export default function Sidebar({ team, teams }) {
   const [isAddChannelModalOpened, setIsAddChannelModalOpened] = useState(false);
+  const [isInviteModalOpened, setIsInviteModalOpened] = useState(false);
   let loggedInUser = '';
   try {
     const token = localStorage.getItem('token');
@@ -23,12 +25,18 @@ export default function Sidebar({ team, teams }) {
         username={loggedInUser}
         channels={team.channels}
         users={[{ id: 1, name: 'slackbot' }, { id: 2, name: 'user1' }]}
-        handleAddChannel={setIsAddChannelModalOpened}
+        handleAddChannel={() => setIsAddChannelModalOpened(true)}
+        handleInvitePeople={() => setIsInviteModalOpened(true)}
       />
       <AddChannelModal
         teamId={team.id}
         isOpened={isAddChannelModalOpened}
         handleClose={() => setIsAddChannelModalOpened(false)}
+      />
+      <InvitePeopleModal
+        teamId={team.id}
+        isOpened={isInviteModalOpened}
+        handleClose={() => setIsInviteModalOpened(false)}
       />
     </>
   );

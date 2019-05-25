@@ -31,7 +31,7 @@ export default function ViewTeam({
         const currentTeam = teamId
           ? allTeams.find(team => team.id === teamId)
           : allTeams[0];
-        const currentChannel = !!channelId
+        const currentChannel = channelId
           ? currentTeam.channels.find(channel => channel.id === channelId)
           : currentTeam.channels[0];
 

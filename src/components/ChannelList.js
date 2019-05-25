@@ -58,6 +58,7 @@ export default function ChannelList({
   channels,
   users,
   handleAddChannel,
+  handleInvitePeople,
 }) {
   return (
     <Wrapper>
@@ -70,8 +71,7 @@ export default function ChannelList({
       <SectionWrapper>
         <ul>
           <li>
-            Channels{' '}
-            <Icon name='add circle' onClick={() => handleAddChannel(true)} />
+            Channels <Icon name='add circle' onClick={handleAddChannel} />
           </li>
           {channels.map((channel, i) => (
             <Channel key={`channel-${i}`} {...channel} teamId={teamId} />
@@ -85,6 +85,11 @@ export default function ChannelList({
             <DirectMessage key={`channel-${i}`} name={user.name} />
           ))}
         </ul>
+      </SectionWrapper>
+      <SectionWrapper>
+        <a href='#invite-people' onClick={handleInvitePeople}>
+          + Invite People
+        </a>
       </SectionWrapper>
     </Wrapper>
   );

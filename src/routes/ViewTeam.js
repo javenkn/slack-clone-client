@@ -5,10 +5,11 @@ import { Query } from 'react-apollo';
 
 import { allTeamsQuery } from '../graphql/team';
 
-import Header from '../components/Header';
-import MessageList from '../components/MessageList';
-import SendMessage from '../components/SendMessage';
 import Sidebar from '../containers/Sidebar';
+import MessageContainer from '../containers/Message';
+
+import Header from '../components/Header';
+import SendMessage from '../components/SendMessage';
 
 const Layout = styled.div`
   display: grid;
@@ -65,8 +66,11 @@ export default function ViewTeam({
               }))}
             />
             <Header channelName={currentChannel.name} />
-            <MessageList channelId={currentChannel.id} />
-            <SendMessage channelName={currentChannel.name} />
+            <MessageContainer channelId={currentChannel.id} />
+            <SendMessage
+              channelName={currentChannel.name}
+              channelId={currentChannel.id}
+            />
           </Layout>
         );
       }}

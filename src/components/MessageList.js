@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
+import { gql } from 'apollo-boost';
 import { Comment } from 'semantic-ui-react';
 
 const Wrapper = styled.div`
@@ -11,7 +12,33 @@ const Wrapper = styled.div`
   overflow-y: auto;
 `;
 
-export default function MessageList({ messages }) {
+const MESSAGES_SUBSCRIPTION = gql`
+  subscription($channelId: ID!) {
+    messageCreated(channelId: $channelId) {
+      id
+      text
+      user {
+        username
+      }
+      createdAt
+    }
+  }
+`;
+
+export default function MessageList({ messages, channelId, subscribeToMore }) {
+  useEffect(() => {
+    subscribeToMore({
+      document: MESSAGES_SUBSCRIPTION,
+      variables: { channelId },
+      updateQuery: (prev, { subscriptionData }) => {
+        if (!subscriptionData.data) return prev;
+        return {
+          ...prev,
+          messages: [...prev.messages, subscriptionData.data.messageCreated],
+        };
+      },
+    });
+  }, []);
   return (
     <Wrapper>
       <Comment.Group>

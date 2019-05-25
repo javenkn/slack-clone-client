@@ -23,12 +23,7 @@ export default function MessageContainer({ channelId }) {
       {({ loading, error, data: { messages = [] } }) => {
         if (loading) return <p>Loading...</p>;
         if (error) return <p>Error :(</p>;
-        return (
-          <div>
-            MESSAGE CONTAINER
-            <MessageList channelId={channelId} />
-          </div>
-        );
+        return <MessageList channelId={channelId} messages={messages} />;
       }}
     </Query>
   );

@@ -14,6 +14,10 @@ const CREATE_CHANNEL = gql`
         id
         name
       }
+      errors {
+        path
+        message
+      }
     }
   }
 `;
@@ -35,6 +39,7 @@ export default function AddChannelModal({ isOpened, handleClose, teamId }) {
                     createChannel: {
                       __typename: 'ChannelResponse',
                       ok: true,
+                      errors: null,
                       channel: {
                         __typename: 'Channel',
                         id: -1,

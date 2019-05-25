@@ -9,11 +9,13 @@ import InvitePeopleModal from '../components/InvitePeopleModal';
 export default function Sidebar({ team, teams }) {
   const [isAddChannelModalOpened, setIsAddChannelModalOpened] = useState(false);
   const [isInviteModalOpened, setIsInviteModalOpened] = useState(false);
-  let loggedInUser = '';
+  const [loggedInUser, setLoggedInUser] = useState('');
+  const [isOwner, setIsOwner] = useState(false);
   try {
     const token = localStorage.getItem('token');
-    const { username } = decode(token);
-    loggedInUser = username;
+    const { username, id } = decode(token);
+    setLoggedInUser(username);
+    setIsOwner(id === parseInt(team.owner));
   } catch (error) {}
 
   return (
@@ -24,6 +26,7 @@ export default function Sidebar({ team, teams }) {
         teamName={team.name}
         username={loggedInUser}
         channels={team.channels}
+        isOwner={isOwner}
         users={[{ id: 1, name: 'slackbot' }, { id: 2, name: 'user1' }]}
         handleAddChannel={() => setIsAddChannelModalOpened(true)}
         handleInvitePeople={() => setIsInviteModalOpened(true)}
@@ -32,7 +35,7 @@ export default function Sidebar({ team, teams }) {
         teamId={team.id}
         isOpened={isAddChannelModalOpened}
         handleClose={e => {
-          e.preventDefault();
+          if (e) e.preventDefault();
           setIsAddChannelModalOpened(false);
         }}
       />
@@ -40,7 +43,7 @@ export default function Sidebar({ team, teams }) {
         teamId={team.id}
         isOpened={isInviteModalOpened}
         handleClose={e => {
-          e.preventDefault();
+          if (e) e.preventDefault();
           setIsInviteModalOpened(false);
         }}
       />

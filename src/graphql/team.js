@@ -10,5 +10,13 @@ export const allTeamsQuery = gql`
         name
       }
     }
+    memberOfTeams {
+      id
+      name
+      channels {
+        id
+        name
+      }
+    }
   }
 `;

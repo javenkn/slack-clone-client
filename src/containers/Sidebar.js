@@ -31,12 +31,18 @@ export default function Sidebar({ team, teams }) {
       <AddChannelModal
         teamId={team.id}
         isOpened={isAddChannelModalOpened}
-        handleClose={() => setIsAddChannelModalOpened(false)}
+        handleClose={e => {
+          e.preventDefault();
+          setIsAddChannelModalOpened(false);
+        }}
       />
       <InvitePeopleModal
         teamId={team.id}
         isOpened={isInviteModalOpened}
-        handleClose={() => setIsInviteModalOpened(false)}
+        handleClose={e => {
+          e.preventDefault();
+          setIsInviteModalOpened(false);
+        }}
       />
     </>
   );

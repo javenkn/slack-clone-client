@@ -4,7 +4,7 @@ import { Formik } from 'formik';
 import { Mutation } from 'react-apollo';
 import { gql } from 'apollo-boost';
 
-import { meQuery } from '../graphql/user';
+import { meQuery } from '../../graphql/user';
 
 const CREATE_CHANNEL = gql`
   mutation($teamId: ID!, $name: String!) {

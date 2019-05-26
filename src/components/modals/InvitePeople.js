@@ -4,7 +4,7 @@ import { Formik } from 'formik';
 import { Mutation } from 'react-apollo';
 import { gql } from 'apollo-boost';
 
-import normalizeErrors from '../utils/normalizeErrors';
+import normalizeErrors from '../../utils/normalizeErrors';
 
 const ADD_TEAM_MEMBER = gql`
   mutation($email: String!, $teamId: ID!) {

@@ -2,12 +2,21 @@ import React, { useState } from 'react';
 
 import TeamList from '../components/TeamList';
 import ChannelList from '../components/ChannelList';
-import AddChannelModal from '../components/AddChannelModal';
-import InvitePeopleModal from '../components/InvitePeopleModal';
+import AddChannelModal from '../components/modals/AddChannel';
+import DirectMessageModal from '../components/modals/DirectMessage';
+import InvitePeopleModal from '../components/modals/InvitePeople';
 
 export default function Sidebar({ team, teams, username }) {
   const [isAddChannelModalOpened, setIsAddChannelModalOpened] = useState(false);
+  const [isDirectMessageModalOpened, setIsDirectMessageModalOpened] = useState(
+    false,
+  );
   const [isInviteModalOpened, setIsInviteModalOpened] = useState(false);
+
+  const handleModalToggle = (e, openFn) => {
+    if (e) e.preventDefault();
+    return openFn;
+  };
 
   return (
     <>
@@ -20,23 +29,27 @@ export default function Sidebar({ team, teams, username }) {
         isAdmin={team.admin}
         users={[{ id: 1, name: 'slackbot' }, { id: 2, name: 'user1' }]}
         handleAddChannel={() => setIsAddChannelModalOpened(true)}
+        handleDirectMessage={() => setIsDirectMessageModalOpened(true)}
         handleInvitePeople={() => setIsInviteModalOpened(true)}
       />
       <AddChannelModal
         teamId={team.id}
         isOpened={isAddChannelModalOpened}
-        handleClose={e => {
-          if (e) e.preventDefault();
-          setIsAddChannelModalOpened(false);
-        }}
+        handleClose={e =>
+          handleModalToggle(e, setIsAddChannelModalOpened(false))
+        }
+      />
+      <DirectMessageModal
+        teamId={team.id}
+        isOpened={isDirectMessageModalOpened}
+        handleClose={e =>
+          handleModalToggle(e, setIsDirectMessageModalOpened(false))
+        }
       />
       <InvitePeopleModal
         teamId={team.id}
         isOpened={isInviteModalOpened}
-        handleClose={e => {
-          if (e) e.preventDefault();
-          setIsInviteModalOpened(false);
-        }}
+        handleClose={e => handleModalToggle(e, setIsInviteModalOpened(false))}
       />
     </>
   );

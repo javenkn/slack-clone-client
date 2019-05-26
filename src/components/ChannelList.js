@@ -58,6 +58,7 @@ export default function ChannelList({
   channels,
   users,
   handleAddChannel,
+  handleDirectMessage,
   handleInvitePeople,
   isAdmin,
 }) {
@@ -82,7 +83,10 @@ export default function ChannelList({
       </SectionWrapper>
       <SectionWrapper>
         <ul>
-          <li>Direct Messages</li>
+          <li>
+            Direct Messages{' '}
+            <Icon name='add circle' onClick={handleDirectMessage} />
+          </li>
           {users.map((user, i) => (
             <DirectMessage key={`channel-${i}`} name={user.name} />
           ))}

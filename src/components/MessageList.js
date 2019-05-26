@@ -27,7 +27,8 @@ const MESSAGES_SUBSCRIPTION = gql`
 
 export default function MessageList({ messages, channelId, subscribeToMore }) {
   useEffect(() => {
-    subscribeToMore({
+    // subscribeToMore returns an unsubsribe function
+    const unsubscribe = subscribeToMore({
       document: MESSAGES_SUBSCRIPTION,
       variables: { channelId },
       updateQuery: (prev, { subscriptionData }) => {
@@ -38,7 +39,9 @@ export default function MessageList({ messages, channelId, subscribeToMore }) {
         };
       },
     });
-  }, []);
+
+    return () => unsubscribe();
+  }, [channelId]);
   return (
     <Wrapper>
       <Comment.Group>

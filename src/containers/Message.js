@@ -19,7 +19,11 @@ const GET_MESSAGES = gql`
 
 export default function MessageContainer({ channelId }) {
   return (
-    <Query query={GET_MESSAGES} variables={{ channelId }}>
+    <Query
+      query={GET_MESSAGES}
+      variables={{ channelId }}
+      fetchPolicy='network-only'
+    >
       {({ subscribeToMore, loading, error, data: { messages = [] } }) => {
         if (loading) return <p>Loading...</p>;
         if (error) return <p>Error :(</p>;

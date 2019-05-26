@@ -6,6 +6,7 @@ import Register from './Register';
 import Login from './Login';
 import CreateTeam from './CreateTeam';
 import ViewTeam from './ViewTeam';
+import DirectMessage from './DirectMessage';
 import PrivateRoute from './Private';
 
 export default () => (
@@ -14,6 +15,11 @@ export default () => (
       <Route path='/' exact component={Home} />
       <Route path='/register' exact component={Register} />
       <Route path='/login' exact component={Login} />
+      <PrivateRoute
+        path='/view-team/user/:teamId/:userId'
+        exact
+        component={DirectMessage}
+      />
       <PrivateRoute
         path='/view-team/:teamId?/:channelId?'
         exact

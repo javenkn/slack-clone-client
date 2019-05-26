@@ -19,15 +19,9 @@ const Layout = styled.div`
   grid-template-rows: auto 1fr auto;
 `;
 
-const CREATE_MESSAGE = gql`
-  mutation($channelId: ID!, $text: String!) {
-    createMessage(channelId: $channelId, text: $text)
-  }
-`;
-
-export default function ViewTeam({
+export default function DirectMessage({
   match: {
-    params: { teamId, channelId },
+    params: { teamId, userId },
   },
 }) {
   return (
@@ -51,18 +45,6 @@ export default function ViewTeam({
           return <Redirect to={`/view-team/${teams[0].id}`} />;
         }
 
-        const currentChannel = parseInt(channelId)
-          ? currentTeam.channels.find(channel => channel.id === channelId)
-          : currentTeam.channels[0];
-
-        if (!currentChannel) {
-          return (
-            <Redirect
-              to={`/view-team//${currentTeam.id}/${currentTeam.channels[0].id}`}
-            />
-          );
-        }
-
         return (
           <Layout>
             <Sidebar
@@ -73,20 +55,13 @@ export default function ViewTeam({
               }))}
               username={username}
             />
-            <Header channelName={currentChannel.name} />
-            <MessageContainer channelId={currentChannel.id} />
-            <Mutation mutation={CREATE_MESSAGE}>
+            {/* <Header channelName={currentChannel.name} />
+            <MessageContainer channelId={currentChannel.id} /> */}
+            {/* <Mutation mutation={CREATE_MESSAGE}>
               {(createMessage, { data }) => (
-                <SendMessage
-                  placeholder={currentChannel.name}
-                  onSend={async text =>
-                    await createMessage({
-                      variables: { text, channelId: currentChannel.id },
-                    })
-                  }
-                />
+                <SendMessage onSubmit={() => {}} placeholder={userId} />
               )}
-            </Mutation>
+            </Mutation> */}
           </Layout>
         );
       }}

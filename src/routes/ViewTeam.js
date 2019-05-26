@@ -19,6 +19,19 @@ const Layout = styled.div`
   grid-template-rows: auto 1fr auto;
 `;
 
+const GET_MESSAGES = gql`
+  query($channelId: ID!) {
+    messages(channelId: $channelId) {
+      id
+      text
+      user {
+        username
+      }
+      createdAt
+    }
+  }
+`;
+
 const CREATE_MESSAGE = gql`
   mutation($channelId: ID!, $text: String!) {
     createMessage(channelId: $channelId, text: $text)
@@ -74,7 +87,18 @@ export default function ViewTeam({
               username={username}
             />
             <Header channelName={currentChannel.name} />
-            <MessageContainer channelId={currentChannel.id} />
+            <Query
+              query={GET_MESSAGES}
+              variables={{ channelId: currentChannel.id }}
+              fetchPolicy='network-only'
+            >
+              {queryProps => (
+                <MessageContainer
+                  {...queryProps}
+                  channelId={currentChannel.id}
+                />
+              )}
+            </Query>
             <Mutation mutation={CREATE_MESSAGE}>
               {(createMessage, { data }) => (
                 <SendMessage

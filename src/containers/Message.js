@@ -1,12 +1,22 @@
-import React from 'react';
-import { Query } from 'react-apollo';
+import React, { useEffect } from 'react';
+import styled from 'styled-components';
 import { gql } from 'apollo-boost';
+import { Comment } from 'semantic-ui-react';
 
-import MessageList from '../components/MessageList';
+import Message from '../components/Message';
 
-const GET_MESSAGES = gql`
-  query($channelId: ID!) {
-    messages(channelId: $channelId) {
+const Wrapper = styled.div`
+  grid-column: 3;
+  grid-row: 2;
+  padding-left: 20px;
+  display: flex;
+  flex-direction: column-reverse;
+  overflow-y: auto;
+`;
+
+const MESSAGES_SUBSCRIPTION = gql`
+  subscription($channelId: ID!) {
+    messageCreated(channelId: $channelId) {
       id
       text
       user {
@@ -17,24 +27,44 @@ const GET_MESSAGES = gql`
   }
 `;
 
-export default function MessageContainer({ channelId }) {
+export default function MessageContainer({
+  channelId,
+  subscribeToMore,
+  loading,
+  error,
+  data: { messages = [] },
+}) {
+  useEffect(() => {
+    // subscribeToMore returns an unsubsribe function
+    const unsubscribe = subscribeToMore({
+      document: MESSAGES_SUBSCRIPTION,
+      variables: { channelId },
+      updateQuery: (prev, { subscriptionData }) => {
+        if (!subscriptionData.data) return prev;
+        return {
+          ...prev,
+          messages: [...prev.messages, subscriptionData.data.messageCreated],
+        };
+      },
+    });
+
+    return () => unsubscribe();
+  }, [channelId]);
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error :(</p>;
   return (
-    <Query
-      query={GET_MESSAGES}
-      variables={{ channelId }}
-      fetchPolicy='network-only'
-    >
-      {({ subscribeToMore, loading, error, data: { messages = [] } }) => {
-        if (loading) return <p>Loading...</p>;
-        if (error) return <p>Error :(</p>;
-        return (
-          <MessageList
-            channelId={channelId}
-            messages={messages}
-            subscribeToMore={subscribeToMore}
+    <Wrapper>
+      <Comment.Group>
+        {messages.map(message => (
+          <Message
+            key={`message-${message.id}`}
+            username={message.user.username}
+            createdAt={message.createdAt}
+            text={message.text}
           />
-        );
-      }}
-    </Query>
+        ))}
+      </Comment.Group>
+    </Wrapper>
   );
 }

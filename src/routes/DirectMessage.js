@@ -7,7 +7,7 @@ import { gql } from 'apollo-boost';
 import { meQuery } from '../graphql/user';
 
 import Sidebar from '../containers/Sidebar';
-import MessageContainer from '../containers/Message';
+import DirectMessageContainer from '../containers/DirectMessage';
 
 import Header from '../components/Header';
 import SendMessage from '../components/SendMessage';
@@ -17,6 +17,25 @@ const Layout = styled.div`
   height: 100vh;
   grid-template-columns: 100px 250px 1fr;
   grid-template-rows: auto 1fr auto;
+`;
+
+const CREATE_DIRECT_MESSAGE = gql`
+  mutation($receiverId: ID!, $teamId: ID!, $text: String!) {
+    createDirectMessage(receiverId: $receiverId, teamId: $teamId, text: $text)
+  }
+`;
+
+const GET_DIRECT_MESSAGES = gql`
+  query($teamId: ID!, $otherUserId: ID!) {
+    directMessages(teamId: $teamId, otherUserId: $otherUserId) {
+      id
+      text
+      sender {
+        username
+      }
+      createdAt
+    }
+  }
 `;
 
 export default function DirectMessage({
@@ -55,13 +74,32 @@ export default function DirectMessage({
               }))}
               username={username}
             />
-            {/* <Header channelName={currentChannel.name} />
-            <MessageContainer channelId={currentChannel.id} /> */}
-            {/* <Mutation mutation={CREATE_MESSAGE}>
-              {(createMessage, { data }) => (
-                <SendMessage onSubmit={() => {}} placeholder={userId} />
+            <Header channelName='Someone' />
+            <Query
+              query={GET_DIRECT_MESSAGES}
+              variables={{ teamId, otherUserId: userId }}
+              fetchPolicy='network-only'
+            >
+              {queryProps => (
+                <DirectMessageContainer
+                  {...queryProps}
+                  teamId={teamId}
+                  userId={userId}
+                />
               )}
-            </Mutation> */}
+            </Query>
+            <Mutation mutation={CREATE_DIRECT_MESSAGE}>
+              {(createDirectMessage, { data }) => (
+                <SendMessage
+                  onSend={async text =>
+                    createDirectMessage({
+                      variables: { text, receiverId: userId, teamId },
+                    })
+                  }
+                  placeholder={userId}
+                />
+              )}
+            </Mutation>
           </Layout>
         );
       }}

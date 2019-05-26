@@ -4,7 +4,7 @@ import { Formik } from 'formik';
 import { Mutation } from 'react-apollo';
 import { gql } from 'apollo-boost';
 
-import { allTeamsQuery } from '../graphql/team';
+import { meQuery } from '../graphql/user';
 
 const CREATE_CHANNEL = gql`
   mutation($teamId: ID!, $name: String!) {
@@ -51,20 +51,23 @@ export default function AddChannelModal({ isOpened, handleClose, teamId }) {
                     const { ok, channel } = createChannel;
                     if (!ok) return;
                     // Read the data from our cache for this query.
-                    const data = proxy.readQuery({ query: allTeamsQuery });
+                    const data = proxy.readQuery({ query: meQuery });
                     // Write our data back to the cache with the new comment in it
                     proxy.writeQuery({
-                      query: allTeamsQuery,
+                      query: meQuery,
                       data: {
                         ...data,
-                        allTeams: data.allTeams.map(team => {
-                          if (team.id === teamId) {
-                            return {
-                              ...team,
-                              channels: [...team.channels, channel],
-                            };
-                          } else return team;
-                        }),
+                        me: {
+                          ...data.me,
+                          teams: data.me.teams.map(team => {
+                            if (team.id === teamId) {
+                              return {
+                                ...team,
+                                channels: [...team.channels, channel],
+                              };
+                            } else return team;
+                          }),
+                        },
                       },
                     });
                   },

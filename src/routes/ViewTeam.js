@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { Redirect } from 'react-router-dom';
 import { Query } from 'react-apollo';
 
-import { allTeamsQuery } from '../graphql/team';
+import { meQuery } from '../graphql/user';
 
 import Sidebar from '../containers/Sidebar';
 import MessageContainer from '../containers/Message';
@@ -24,24 +24,24 @@ export default function ViewTeam({
   },
 }) {
   return (
-    <Query query={allTeamsQuery}>
-      {({ loading, error, data: { allTeams = [], memberOfTeams = [] } }) => {
+    <Query query={meQuery} fetchPolicy='network-only'>
+      {({ loading, error, data: { me } }) => {
         if (loading) return <p>Loading...</p>;
         if (error) return <p>Error :(</p>;
 
         // all of the user's teams
-        const userTeams = [...allTeams, ...memberOfTeams];
+        const { teams } = me;
 
-        if (!userTeams.length) {
+        if (!teams.length) {
           return <Redirect to='/create-team' />;
         }
         // default to first team if no teamId is passed through props
         const currentTeam = parseInt(teamId)
-          ? userTeams.find(team => team.id === teamId)
-          : userTeams[0];
+          ? teams.find(team => team.id === teamId)
+          : teams[0];
 
         if (!currentTeam) {
-          return <Redirect to={`/view-team/${userTeams[0].id}`} />;
+          return <Redirect to={`/view-team/${teams[0].id}`} />;
         }
 
         const currentChannel = parseInt(channelId)
@@ -60,7 +60,7 @@ export default function ViewTeam({
           <Layout>
             <Sidebar
               team={currentTeam}
-              teams={userTeams.map(team => ({
+              teams={teams.map(team => ({
                 id: team.id,
                 letter: team.name.charAt(0).toUpperCase(),
               }))}

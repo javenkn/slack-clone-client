@@ -30,7 +30,7 @@ export default function ViewTeam({
         if (error) return <p>Error :(</p>;
 
         // all of the user's teams
-        const { teams } = me;
+        const { teams, username } = me;
 
         if (!teams.length) {
           return <Redirect to='/create-team' />;
@@ -64,6 +64,7 @@ export default function ViewTeam({
                 id: team.id,
                 letter: team.name.charAt(0).toUpperCase(),
               }))}
+              username={username}
             />
             <Header channelName={currentChannel.name} />
             <MessageContainer channelId={currentChannel.id} />

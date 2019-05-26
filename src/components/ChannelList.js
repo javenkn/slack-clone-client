@@ -59,7 +59,7 @@ export default function ChannelList({
   users,
   handleAddChannel,
   handleInvitePeople,
-  isOwner,
+  isAdmin,
 }) {
   return (
     <Wrapper>
@@ -73,7 +73,7 @@ export default function ChannelList({
         <ul>
           <li>
             Channels{' '}
-            {isOwner && <Icon name='add circle' onClick={handleAddChannel} />}
+            {isAdmin && <Icon name='add circle' onClick={handleAddChannel} />}
           </li>
           {channels.map((channel, i) => (
             <Channel key={`channel-${i}`} {...channel} teamId={teamId} />
@@ -89,7 +89,7 @@ export default function ChannelList({
         </ul>
       </SectionWrapper>
       <SectionWrapper>
-        {isOwner && (
+        {isAdmin && (
           <a href='#invite-people' onClick={handleInvitePeople}>
             + Invite People
           </a>

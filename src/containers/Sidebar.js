@@ -27,7 +27,7 @@ export default function Sidebar({ team, teams, username }) {
         username={username}
         channels={team.channels}
         isAdmin={team.admin}
-        users={[{ id: 1, name: 'slackbot' }, { id: 2, name: 'user1' }]}
+        users={team.directMessageMembers}
         handleAddChannel={() => setIsAddChannelModalOpened(true)}
         handleDirectMessage={() => setIsDirectMessageModalOpened(true)}
         handleInvitePeople={() => setIsInviteModalOpened(true)}

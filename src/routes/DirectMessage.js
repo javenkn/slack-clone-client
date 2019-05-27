@@ -38,14 +38,43 @@ const GET_DIRECT_MESSAGES = gql`
   }
 `;
 
+const directMessageMeQuery = gql`
+  query($userId: ID!) {
+    getUser(userId: $userId) {
+      username
+    }
+    me {
+      id
+      username
+      teams {
+        id
+        name
+        channels {
+          id
+          name
+        }
+        admin
+        directMessageMembers {
+          id
+          username
+        }
+      }
+    }
+  }
+`;
+
 export default function DirectMessage({
   match: {
     params: { teamId, userId },
   },
 }) {
   return (
-    <Query query={meQuery} fetchPolicy='network-only'>
-      {({ loading, error, data: { me } }) => {
+    <Query
+      query={directMessageMeQuery}
+      variables={{ userId }}
+      fetchPolicy='network-only'
+    >
+      {({ loading, error, data: { me, getUser } }) => {
         if (loading) return <p>Loading...</p>;
         if (error) return <p>Error :(</p>;
 
@@ -74,7 +103,7 @@ export default function DirectMessage({
               }))}
               username={username}
             />
-            <Header channelName='Someone' />
+            <Header channelName={getUser.username} />
             <Query
               query={GET_DIRECT_MESSAGES}
               variables={{ teamId, otherUserId: userId }}
@@ -83,7 +112,7 @@ export default function DirectMessage({
               {queryProps => (
                 <DirectMessageContainer
                   {...queryProps}
-                  teamId={teamId}
+                  teamId={currentTeam.id}
                   userId={userId}
                 />
               )}
@@ -94,6 +123,33 @@ export default function DirectMessage({
                   onSend={async text =>
                     createDirectMessage({
                       variables: { text, receiverId: userId, teamId },
+                      optimisticResponse: {
+                        createDirectMessage: true,
+                      },
+                      update: proxy => {
+                        // Read the data from our cache for this query.
+                        const data = proxy.readQuery({ query: meQuery });
+                        const teamIdx = data.me.teams.findIndex(
+                          team => team.id === currentTeam.id,
+                        );
+                        const userDoesNotExist = data.me.teams[
+                          teamIdx
+                        ].directMessageMembers.every(
+                          member => member.id !== userId,
+                        );
+                        if (userDoesNotExist) {
+                          data.me.teams[teamIdx].directMessageMembers.push({
+                            __typename: 'User',
+                            id: userId,
+                            username: getUser.username,
+                          });
+                          // Write our data back to the cache with the new comment in it
+                          proxy.writeQuery({
+                            query: meQuery,
+                            data,
+                          });
+                        }
+                      },
                     })
                   }
                   placeholder={userId}

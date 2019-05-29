@@ -121,7 +121,7 @@ export default function DirectMessage({
               {(createDirectMessage, { data }) => (
                 <SendMessage
                   onSend={async text =>
-                    createDirectMessage({
+                    await createDirectMessage({
                       variables: { text, receiverId: userId, teamId },
                       optimisticResponse: {
                         createDirectMessage: true,

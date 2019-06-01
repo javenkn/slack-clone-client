@@ -1,8 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
+import { Mutation } from 'react-apollo';
 import { Formik } from 'formik';
 import { Input, Button, Icon } from 'semantic-ui-react';
+
 import FileUpload from './FileUpload';
+import { CREATE_FILE_MESSAGE } from '../graphql/fileMessage';
 
 const Wrapper = styled.div`
   grid-column: 3;
@@ -14,7 +17,7 @@ const Wrapper = styled.div`
 
 const ENTER_KEY = 13;
 
-export default function SendMessage({ placeholder, onSend }) {
+export default function SendMessage({ channelId, placeholder, onSend }) {
   return (
     <Formik
       initialValues={{ message: '' }}
@@ -31,11 +34,15 @@ export default function SendMessage({ placeholder, onSend }) {
     >
       {({ values, handleChange, handleBlur, isSubmitting, handleSubmit }) => (
         <Wrapper>
-          <FileUpload>
-            <Button icon>
-              <Icon name='plus' />
-            </Button>
-          </FileUpload>
+          <Mutation mutation={CREATE_FILE_MESSAGE}>
+            {(createMessage, { data }) => (
+              <FileUpload channelId={channelId} createMessage={createMessage}>
+                <Button icon>
+                  <Icon name='plus' />
+                </Button>
+              </FileUpload>
+            )}
+          </Mutation>
           <Input
             name='message'
             placeholder={`Message #${placeholder}`}

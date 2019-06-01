@@ -102,6 +102,7 @@ export default function ViewTeam({
             <Mutation mutation={CREATE_MESSAGE}>
               {(createMessage, { data }) => (
                 <SendMessage
+                  channelId={currentChannel.id}
                   placeholder={currentChannel.name}
                   onSend={async text =>
                     await createMessage({

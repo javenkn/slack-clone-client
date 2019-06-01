@@ -1,11 +1,11 @@
 import { split } from 'apollo-link';
+// import { HttpLink } from 'apollo-link-http';
 import { WebSocketLink } from 'apollo-link-ws';
 import { getMainDefinition } from 'apollo-utilities';
-import createFileLink from './createFileLink';
-// Create an http link:
-const httpLink = createFileLink({
-  uri: 'http://localhost:3000/graphql',
-});
+import { createUploadLink } from 'apollo-upload-client';
+
+const fileLink = createUploadLink({ uri: 'http://localhost:3000/graphql' });
+// const httpLink = new HttpLink({ uri: 'http://localhost:3000/graphql' });
 
 // Create a WebSocket link:
 const wsLink = new WebSocketLink({
@@ -30,5 +30,5 @@ export default split(
     );
   },
   wsLink,
-  httpLink,
+  fileLink,
 );

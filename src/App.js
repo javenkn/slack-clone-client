@@ -6,7 +6,7 @@ import { onError } from 'apollo-link-error';
 import { ApolloProvider } from 'react-apollo';
 import 'semantic-ui-css/semantic.min.css';
 
-import httpLink from './apollo';
+import terminatingLink from './apollo';
 import Routes from './routes';
 
 const authMiddleware = new ApolloLink((operation, forward) => {
@@ -48,8 +48,10 @@ const errorLink = onError(({ graphQLErrors }) => {
   }
 });
 
+const link = ApolloLink.from([authMiddleware, errorLink, terminatingLink]);
+
 const client = new ApolloClient({
-  link: ApolloLink.from([authMiddleware, errorLink, httpLink]),
+  link,
   cache: appCache,
 });
 

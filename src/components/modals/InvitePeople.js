@@ -37,7 +37,18 @@ export default function InvitePeopleModal({ isOpened, handleClose, teamId }) {
                   setSubmitting(false);
                 } else {
                   setSubmitting(false);
-                  setErrors(normalizeErrors(errors));
+                  const filteredErrors = errors.filter(
+                    m => m.path !== 'user_id',
+                  );
+                  setErrors(
+                    normalizeErrors([
+                      ...filteredErrors,
+                      {
+                        path: 'email',
+                        message: 'This user is already part of this team.',
+                      },
+                    ]),
+                  );
                 }
               }}
             >

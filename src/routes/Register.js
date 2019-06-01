@@ -40,7 +40,7 @@ export default function Register(props) {
     });
     const { ok, errors } = response.data.register;
     if (ok) {
-      props.history.push('/');
+      props.history.push('/login');
     } else {
       const sortedErrors = errors.reduce(
         (errObj, { path, message }) => ({

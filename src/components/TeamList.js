@@ -48,6 +48,9 @@ export default function TeamList({ teams }) {
         {teams.map((team, i) => (
           <Team key={`team-${i}`} {...team} />
         ))}
+        <Link to={`/create-team`}>
+          <TeamItem>+</TeamItem>
+        </Link>
       </ul>
     </Wrapper>
   );

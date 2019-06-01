@@ -4,6 +4,7 @@ import { gql } from 'apollo-boost';
 import { Comment } from 'semantic-ui-react';
 
 import Message from '../components/Message';
+import FileUpload from '../components/FileUpload';
 
 const Wrapper = styled.div`
   grid-column: 3;
@@ -55,16 +56,18 @@ export default function MessageContainer({
   if (error) return <p>Error :(</p>;
   return (
     <Wrapper>
-      <Comment.Group>
-        {messages.map(message => (
-          <Message
-            key={`message-${message.id}`}
-            username={message.user.username}
-            createdAt={message.createdAt}
-            text={message.text}
-          />
-        ))}
-      </Comment.Group>
+      <FileUpload noClick>
+        <Comment.Group>
+          {messages.map(message => (
+            <Message
+              key={`message-${message.id}`}
+              username={message.user.username}
+              createdAt={message.createdAt}
+              text={message.text}
+            />
+          ))}
+        </Comment.Group>
+      </FileUpload>
     </Wrapper>
   );
 }

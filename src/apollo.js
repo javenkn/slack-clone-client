@@ -1,10 +1,9 @@
 import { split } from 'apollo-link';
-import { HttpLink } from 'apollo-link-http';
 import { WebSocketLink } from 'apollo-link-ws';
 import { getMainDefinition } from 'apollo-utilities';
-
+import createFileLink from './createFileLink';
 // Create an http link:
-const httpLink = new HttpLink({
+const httpLink = createFileLink({
   uri: 'http://localhost:3000/graphql',
 });
 

@@ -1,13 +1,13 @@
 import React from 'react';
 import { Comment } from 'semantic-ui-react';
-import RenderText from './TextFile';
+import TextFile from './TextFile';
 
 const MessageType = ({ url, text, fileType }) => {
   if (url) {
     if (fileType.startsWith('image/')) {
       return <img src={url} alt='' />;
     } else if (fileType === 'text/plain') {
-      return <RenderText url={url} />;
+      return <TextFile url={url} />;
     } else if (fileType.startsWith('audio/')) {
       return (
         <div>

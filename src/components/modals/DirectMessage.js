@@ -1,18 +1,10 @@
 import React from 'react';
 import { Form, Modal, Button } from 'semantic-ui-react';
 import { Query } from 'react-apollo';
-import { gql } from 'apollo-boost';
 import { withRouter } from 'react-router-dom';
 import AutoComplete from '../AutoComplete';
 
-const GET_TEAM_MEMBERS = gql`
-  query($teamId: ID!) {
-    getTeamMembers(teamId: $teamId) {
-      id
-      username
-    }
-  }
-`;
+import { GET_TEAM_MEMBERS } from '../../graphql/teamMembers';
 
 export default withRouter(function DirectMessageModal({
   isOpened,
@@ -28,7 +20,7 @@ export default withRouter(function DirectMessageModal({
 
         return (
           <Modal open={isOpened} onClose={handleClose}>
-            <Modal.Header>Add Channel</Modal.Header>
+            <Modal.Header>Message a user</Modal.Header>
             <Modal.Content>
               <Form>
                 <Form.Field>

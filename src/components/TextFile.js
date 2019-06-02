@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
 
-export default function RenderText({ url }) {
+export default function TextFile({ url }) {
   const [text, setText] = useState('');
-  useEffect(async () => {
-    const response = await fetch(url);
-    const text = await response.text();
-    setText(text);
+  useEffect(() => {
+    async function fetchTextFile() {
+      const response = await fetch(url);
+      const text = await response.text();
+      setText(text);
+    }
+    fetchTextFile();
   }, []);
   return (
     <div>

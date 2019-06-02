@@ -1,14 +1,20 @@
 import React from 'react';
-import { Form, Modal, Input, Button } from 'semantic-ui-react';
+import { Form, Modal, Input, Button, Checkbox } from 'semantic-ui-react';
 import { Formik } from 'formik';
 import { Mutation } from 'react-apollo';
 import { gql } from 'apollo-boost';
 
 import { meQuery } from '../../graphql/user';
+import MultiSelectUsers from '../MultiSelectUsers';
 
 const CREATE_CHANNEL = gql`
-  mutation($teamId: ID!, $name: String!) {
-    createChannel(teamId: $teamId, name: $name) {
+  mutation($teamId: ID!, $name: String!, $public: Boolean, $members: [ID!]) {
+    createChannel(
+      teamId: $teamId
+      name: $name
+      public: $public
+      members: $members
+    ) {
       ok
       channel {
         id
@@ -30,10 +36,13 @@ export default function AddChannelModal({ isOpened, handleClose, teamId }) {
           <Modal.Header>Add Channel</Modal.Header>
           <Modal.Content>
             <Formik
-              initialValues={{ name: '' }}
-              onSubmit={async ({ name }, { setSubmitting }) => {
+              initialValues={{ name: '', isPublic: true, members: [] }}
+              onSubmit={async (
+                { name, members, isPublic },
+                { setSubmitting },
+              ) => {
                 await createChannel({
-                  variables: { name, teamId },
+                  variables: { name, teamId, members, public: isPublic },
                   optimisticResponse: {
                     __typename: 'Mutation',
                     createChannel: {
@@ -82,6 +91,7 @@ export default function AddChannelModal({ isOpened, handleClose, teamId }) {
                 handleBlur,
                 isSubmitting,
                 handleSubmit,
+                setFieldValue,
               }) => (
                 <Form>
                   <Form.Field>
@@ -94,6 +104,28 @@ export default function AddChannelModal({ isOpened, handleClose, teamId }) {
                       onBlur={handleBlur}
                     />
                   </Form.Field>
+                  <Form.Field>
+                    <Checkbox
+                      toggle
+                      label='Private'
+                      values={values.isPublic.toString()}
+                      onChange={(e, { checked }) =>
+                        setFieldValue('isPublic', !checked)
+                      }
+                    />
+                  </Form.Field>
+                  {values.isPublic ? null : (
+                    <Form.Field>
+                      <MultiSelectUsers
+                        value={values.members}
+                        placeholder='Select users to invite'
+                        teamId={teamId}
+                        handleChange={(e, { value }) =>
+                          setFieldValue('members', value)
+                        }
+                      />
+                    </Form.Field>
+                  )}
                   <Form.Group>
                     <Button
                       type='button'

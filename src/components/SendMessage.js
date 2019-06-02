@@ -10,7 +10,7 @@ import { CREATE_FILE_MESSAGE } from '../graphql/fileMessage';
 const Wrapper = styled.div`
   grid-column: 3;
   grid-row: 3;
-  margin-left: 20px;
+  margin: 0 20px;
   display: grid;
   grid-template-columns: auto 5fr;
 `;

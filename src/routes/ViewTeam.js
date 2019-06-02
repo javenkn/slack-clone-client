@@ -28,6 +28,8 @@ const GET_MESSAGES = gql`
         username
       }
       createdAt
+      url
+      fileType
     }
   }
 `;

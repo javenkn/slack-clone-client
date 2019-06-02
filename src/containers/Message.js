@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react';
-import styled from 'styled-components';
 import { Mutation } from 'react-apollo';
 import { gql } from 'apollo-boost';
 import { Comment } from 'semantic-ui-react';
@@ -7,15 +6,6 @@ import { Comment } from 'semantic-ui-react';
 import Message from '../components/Message';
 import FileUpload from '../components/FileUpload';
 import { CREATE_FILE_MESSAGE } from '../graphql/fileMessage';
-
-const Wrapper = styled.div`
-  grid-column: 3;
-  grid-row: 2;
-  padding-left: 20px;
-  display: flex;
-  flex-direction: column-reverse;
-  overflow-y: auto;
-`;
 
 const MESSAGES_SUBSCRIPTION = gql`
   subscription($channelId: ID!) {
@@ -26,9 +16,20 @@ const MESSAGES_SUBSCRIPTION = gql`
         username
       }
       createdAt
+      url
+      fileType
     }
   }
 `;
+
+const fileUploadStyles = {
+  gridColumn: 3,
+  gridRow: 2,
+  paddingLeft: '20px',
+  display: 'flex',
+  flexDirection: 'column-reverse',
+  overflowY: 'auto',
+};
 
 export default function MessageContainer({
   channelId,
@@ -57,27 +58,25 @@ export default function MessageContainer({
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error :(</p>;
   return (
-    <Wrapper>
-      <Mutation mutation={CREATE_FILE_MESSAGE}>
-        {(createMessage, { data }) => (
-          <FileUpload
-            noClick
-            createMessage={createMessage}
-            channelId={channelId}
-          >
-            <Comment.Group>
-              {messages.map(message => (
-                <Message
-                  key={`message-${message.id}`}
-                  username={message.user.username}
-                  createdAt={message.createdAt}
-                  text={message.text}
-                />
-              ))}
-            </Comment.Group>
-          </FileUpload>
-        )}
-      </Mutation>
-    </Wrapper>
+    <Mutation mutation={CREATE_FILE_MESSAGE}>
+      {(createMessage, { data }) => (
+        <FileUpload
+          noClick
+          createMessage={createMessage}
+          channelId={channelId}
+          style={fileUploadStyles}
+        >
+          <Comment.Group>
+            {messages.map(message => (
+              <Message
+                key={`message-${message.id}`}
+                username={message.user.username}
+                {...message}
+              />
+            ))}
+          </Comment.Group>
+        </FileUpload>
+      )}
+    </Mutation>
   );
 }

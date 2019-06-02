@@ -6,6 +6,7 @@ export default function FileUpload({
   createMessage,
   channelId,
   noClick,
+  style = {},
 }) {
   const onDrop = useCallback(
     ([file]) => {
@@ -21,7 +22,7 @@ export default function FileUpload({
     noClick,
   });
   return (
-    <div {...getRootProps()}>
+    <div {...getRootProps({ style })}>
       <input {...getInputProps()} />
       {children}
     </div>

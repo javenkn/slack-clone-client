@@ -6,7 +6,7 @@ import AddChannelModal from '../components/modals/AddChannel';
 import DirectMessageModal from '../components/modals/DirectMessage';
 import InvitePeopleModal from '../components/modals/InvitePeople';
 
-export default function Sidebar({ team, teams, username }) {
+export default function Sidebar({ team, teams, username, currentUserId }) {
   const [isAddChannelModalOpened, setIsAddChannelModalOpened] = useState(false);
   const [isDirectMessageModalOpened, setIsDirectMessageModalOpened] = useState(
     false,
@@ -38,6 +38,7 @@ export default function Sidebar({ team, teams, username }) {
         handleClose={e =>
           handleModalToggle(e, setIsAddChannelModalOpened(false))
         }
+        currentUserId={currentUserId}
       />
       <DirectMessageModal
         teamId={team.id}

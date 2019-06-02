@@ -28,7 +28,12 @@ const CREATE_CHANNEL = gql`
   }
 `;
 
-export default function AddChannelModal({ isOpened, handleClose, teamId }) {
+export default function AddChannelModal({
+  isOpened,
+  handleClose,
+  currentUserId,
+  teamId,
+}) {
   return (
     <Mutation mutation={CREATE_CHANNEL}>
       {(createChannel, { data }) => (
@@ -119,6 +124,7 @@ export default function AddChannelModal({ isOpened, handleClose, teamId }) {
                       <MultiSelectUsers
                         value={values.members}
                         placeholder='Select users to invite'
+                        currentUserId={currentUserId}
                         teamId={teamId}
                         handleChange={(e, { value }) =>
                           setFieldValue('members', value)

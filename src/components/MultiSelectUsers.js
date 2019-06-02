@@ -7,6 +7,7 @@ export default function MultiSelectUsers({
   value,
   handleChange,
   placeholder,
+  currentUserId,
   teamId,
 }) {
   return (
@@ -24,11 +25,13 @@ export default function MultiSelectUsers({
             multiple
             search
             selection
-            options={getTeamMembers.map(member => ({
-              key: member.id,
-              value: member.id,
-              text: member.username,
-            }))}
+            options={getTeamMembers
+              .filter(member => member.id !== currentUserId)
+              .map(member => ({
+                key: member.id,
+                value: member.id,
+                text: member.username,
+              }))}
           />
         );
       }}

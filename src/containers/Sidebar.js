@@ -18,6 +18,9 @@ export default function Sidebar({ team, teams, username, currentUserId }) {
     return openFn;
   };
 
+  const channels = team.channels.filter(channel => !channel.dm);
+  const directMessages = team.channels.filter(channel => channel.dm);
+
   return (
     <>
       <TeamList teams={teams} />
@@ -25,9 +28,9 @@ export default function Sidebar({ team, teams, username, currentUserId }) {
         teamId={team.id}
         teamName={team.name}
         username={username}
-        channels={team.channels}
+        channels={channels}
         isAdmin={team.admin}
-        users={team.directMessageMembers}
+        directMessages={directMessages}
         handleAddChannel={() => setIsAddChannelModalOpened(true)}
         handleDirectMessage={() => setIsDirectMessageModalOpened(true)}
         handleInvitePeople={() => setIsInviteModalOpened(true)}
@@ -46,6 +49,7 @@ export default function Sidebar({ team, teams, username, currentUserId }) {
         handleClose={e =>
           handleModalToggle(e, setIsDirectMessageModalOpened(false))
         }
+        currentUserId={currentUserId}
       />
       <InvitePeopleModal
         teamId={team.id}

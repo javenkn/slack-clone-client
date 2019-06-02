@@ -1,46 +1,78 @@
 import React from 'react';
 import { Form, Modal, Button } from 'semantic-ui-react';
-import { Query } from 'react-apollo';
+import { Mutation } from 'react-apollo';
+import { gql } from 'apollo-boost';
 import { withRouter } from 'react-router-dom';
-import AutoComplete from '../AutoComplete';
+import { Formik } from 'formik';
 
-import { GET_TEAM_MEMBERS } from '../../graphql/teamMembers';
+import MultiSelectUsers from '../../components/MultiSelectUsers';
+
+const GET_DM_CHANNEL = gql`
+  mutation($teamId: ID!, $members: [ID!]!) {
+    getDMChannel(teamId: $teamId, members: $members)
+  }
+`;
 
 export default withRouter(function DirectMessageModal({
   isOpened,
   handleClose,
   teamId,
-  history,
+  currentUserId,
 }) {
   return (
-    <Query query={GET_TEAM_MEMBERS} variables={{ teamId }}>
-      {({ loading, error, data: { getTeamMembers } }) => {
-        if (loading) return <p>Loading...</p>;
-        if (error) return <p>Error :(</p>;
-
-        return (
-          <Modal open={isOpened} onClose={handleClose}>
-            <Modal.Header>Message a user</Modal.Header>
-            <Modal.Content>
-              <Form>
-                <Form.Field>
-                  {!loading && (
-                    <AutoComplete
+    <Mutation mutation={GET_DM_CHANNEL}>
+      {(getDMChannel, { data }) => (
+        <Formik
+          initialValues={{ members: [] }}
+          onSubmit={async ({ members }, { setSubmitting }) => {
+            const response = await getDMChannel({
+              variables: { teamId, members },
+            });
+            handleClose();
+            setSubmitting(false);
+          }}
+        >
+          {({
+            values,
+            handleChange,
+            handleBlur,
+            isSubmitting,
+            handleSubmit,
+            setFieldValue,
+          }) => (
+            <Modal open={isOpened} onClose={handleClose}>
+              <Modal.Header>Message a user</Modal.Header>
+              <Modal.Content>
+                <Form>
+                  <Form.Field>
+                    <MultiSelectUsers
+                      value={values.members}
+                      placeholder='Select users to message'
+                      currentUserId={currentUserId}
                       teamId={teamId}
-                      teamMembers={getTeamMembers}
-                      history={history}
-                      handleClose={handleClose}
+                      handleChange={(e, { value }) =>
+                        setFieldValue('members', value)
+                      }
                     />
-                  )}
-                </Form.Field>
-                <Button fluid onClick={handleClose}>
-                  Cancel
-                </Button>
-              </Form>
-            </Modal.Content>
-          </Modal>
-        );
-      }}
-    </Query>
+                  </Form.Field>
+                  <Form.Group>
+                    <Button
+                      fluid
+                      disabled={isSubmitting}
+                      onClick={handleSubmit}
+                    >
+                      Create
+                    </Button>
+                    <Button fluid disabled={isSubmitting} onClick={handleClose}>
+                      Cancel
+                    </Button>
+                  </Form.Group>
+                </Form>
+              </Modal.Content>
+            </Modal>
+          )}
+        </Formik>
+      )}
+    </Mutation>
   );
 });

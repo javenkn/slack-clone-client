@@ -40,10 +40,10 @@ const ListItemWrapper = styled.li`
   }
 `;
 
-const DirectMessage = ({ id, username, teamId }) => (
+const DirectMessage = ({ id, name, teamId }) => (
   <Link to={`/view-team/user/${teamId}/${id}`}>
     <ListItemWrapper>
-      <Bubble /> {username}
+      <Bubble /> {name}
     </ListItemWrapper>
   </Link>
 );
@@ -58,7 +58,7 @@ export default function ChannelList({
   teamName,
   username,
   channels,
-  users,
+  directMessages,
   handleAddChannel,
   handleDirectMessage,
   handleInvitePeople,
@@ -89,8 +89,8 @@ export default function ChannelList({
             Direct Messages{' '}
             <Icon name='add circle' onClick={handleDirectMessage} />
           </li>
-          {users.map((user, i) => (
-            <DirectMessage key={`channel-${i}`} {...user} teamId={teamId} />
+          {directMessages.map((message, i) => (
+            <DirectMessage key={`channel-${i}`} {...message} teamId={teamId} />
           ))}
         </ul>
       </SectionWrapper>

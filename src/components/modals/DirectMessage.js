@@ -5,11 +5,15 @@ import { gql } from 'apollo-boost';
 import { withRouter } from 'react-router-dom';
 import { Formik } from 'formik';
 
+import { meQuery } from '../../graphql/user';
 import MultiSelectUsers from '../../components/MultiSelectUsers';
 
 const GET_DM_CHANNEL = gql`
   mutation($teamId: ID!, $members: [ID!]!) {
-    getDMChannel(teamId: $teamId, members: $members)
+    getDMChannel(teamId: $teamId, members: $members) {
+      id
+      name
+    }
   }
 `;
 
@@ -18,30 +22,45 @@ export default withRouter(function DirectMessageModal({
   handleClose,
   teamId,
   currentUserId,
+  history,
 }) {
   return (
     <Mutation mutation={GET_DM_CHANNEL}>
       {(getDMChannel, { data }) => (
         <Formik
           initialValues={{ members: [] }}
-          onSubmit={async ({ members }, { setSubmitting }) => {
-            const response = await getDMChannel({
+          onSubmit={async ({ members }, { resetForm }) => {
+            await getDMChannel({
               variables: { teamId, members },
+              update: (proxy, { data: { getDMChannel } }) => {
+                const { id, name } = getDMChannel;
+                // Read the data from our cache for this query.
+                const data = proxy.readQuery({ query: meQuery });
+                const teamIdx = data.me.teams.findIndex(
+                  team => team.id === teamId,
+                );
+                const notInChannelList = data.me.teams[teamIdx].channels.every(
+                  channel => channel.id !== id,
+                );
+                if (notInChannelList) {
+                  data.me.teams[teamIdx].channels.push({
+                    __typename: 'Channel',
+                    id,
+                    name,
+                    dm: true,
+                  });
+                  proxy.writeQuery({ query: meQuery, data });
+                }
+                history.push(`/view-team/${teamId}/${id}`);
+              },
             });
             handleClose();
-            setSubmitting(false);
+            resetForm();
           }}
         >
-          {({
-            values,
-            handleChange,
-            handleBlur,
-            isSubmitting,
-            handleSubmit,
-            setFieldValue,
-          }) => (
+          {({ values, isSubmitting, handleSubmit, setFieldValue }) => (
             <Modal open={isOpened} onClose={handleClose}>
-              <Modal.Header>Message a user</Modal.Header>
+              <Modal.Header>Direct Messaging</Modal.Header>
               <Modal.Content>
                 <Form>
                   <Form.Field>

@@ -41,7 +41,7 @@ const ListItemWrapper = styled.li`
 `;
 
 const DirectMessage = ({ id, name, teamId }) => (
-  <Link to={`/view-team/user/${teamId}/${id}`}>
+  <Link to={`/view-team/${teamId}/${id}`}>
     <ListItemWrapper>
       <Bubble /> {name}
     </ListItemWrapper>

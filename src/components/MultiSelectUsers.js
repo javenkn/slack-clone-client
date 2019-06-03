@@ -12,7 +12,7 @@ export default function MultiSelectUsers({
 }) {
   return (
     <Query query={GET_TEAM_MEMBERS} variables={{ teamId }}>
-      {({ loading, error, data: { getTeamMembers } }) => {
+      {({ loading, error, data: { getTeamMembers = [] } }) => {
         if (loading) return <p>Loading...</p>;
         if (error) return <p>Error :(</p>;
 

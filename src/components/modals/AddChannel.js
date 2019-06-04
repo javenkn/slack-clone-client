@@ -113,7 +113,7 @@ export default function AddChannelModal({
                     <Checkbox
                       toggle
                       label='Private'
-                      values={values.isPublic.toString()}
+                      checked={values.isPublic}
                       onChange={(e, { checked }) =>
                         setFieldValue('isPublic', !checked)
                       }

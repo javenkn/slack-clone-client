@@ -20,8 +20,8 @@ const Layout = styled.div`
 `;
 
 const GET_MESSAGES = gql`
-  query($channelId: ID!) {
-    messages(channelId: $channelId) {
+  query($channelId: ID!, $offset: Int!) {
+    messages(channelId: $channelId, offset: $offset) {
       id
       text
       user {
@@ -92,7 +92,7 @@ export default function ViewTeam({
             <Header channelName={currentChannel.name} />
             <Query
               query={GET_MESSAGES}
-              variables={{ channelId: currentChannel.id }}
+              variables={{ channelId: currentChannel.id, offset: 0 }}
               fetchPolicy='network-only'
             >
               {queryProps => (

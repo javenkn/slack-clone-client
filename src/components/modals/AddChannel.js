@@ -19,6 +19,7 @@ const CREATE_CHANNEL = gql`
       channel {
         id
         name
+        dm
       }
       errors {
         path
@@ -58,6 +59,7 @@ export default function AddChannelModal({
                         __typename: 'Channel',
                         id: -1,
                         name,
+                        dm: false,
                       },
                     },
                   },
@@ -113,7 +115,7 @@ export default function AddChannelModal({
                     <Checkbox
                       toggle
                       label='Private'
-                      checked={values.isPublic}
+                      checked={!values.isPublic}
                       onChange={(e, { checked }) =>
                         setFieldValue('isPublic', !checked)
                       }

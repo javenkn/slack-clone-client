@@ -1,7 +1,7 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Mutation } from 'react-apollo';
 import { gql } from 'apollo-boost';
-import { Comment } from 'semantic-ui-react';
+import { Comment, Button } from 'semantic-ui-react';
 
 import Message from '../components/Message';
 import FileUpload from '../components/FileUpload';
@@ -34,10 +34,12 @@ const fileUploadStyles = {
 export default function MessageContainer({
   channelId,
   subscribeToMore,
+  fetchMore,
   loading,
   error,
   data: { messages = [] },
 }) {
+  const [hasMoreMessages, setHasMoreMessages] = useState(true);
   useEffect(() => {
     // subscribeToMore returns an unsubsribe function
     const unsubscribe = subscribeToMore({
@@ -67,6 +69,37 @@ export default function MessageContainer({
           style={fileUploadStyles}
         >
           <Comment.Group>
+            {hasMoreMessages && (
+              <Button
+                onClick={() =>
+                  fetchMore({
+                    variables: {
+                      channelId,
+                      offset: messages.length,
+                    },
+                    updateQuery: (previousResult, { fetchMoreResult }) => {
+                      if (!fetchMoreResult) {
+                        return previousResult;
+                      }
+
+                      if (fetchMoreResult.messages.length < 35) {
+                        setHasMoreMessages(false);
+                      }
+
+                      return {
+                        ...previousResult,
+                        messages: [
+                          ...previousResult.messages,
+                          ...fetchMoreResult.messages,
+                        ],
+                      };
+                    },
+                  })
+                }
+              >
+                Load More
+              </Button>
+            )}
             {messages.map(message => (
               <Message
                 key={`message-${message.id}`}

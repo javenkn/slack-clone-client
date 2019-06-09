@@ -8,10 +8,11 @@ const fileLink = createUploadLink({ uri: 'http://localhost:3000/graphql' });
 // const httpLink = new HttpLink({ uri: 'http://localhost:3000/graphql' });
 
 // Create a WebSocket link:
-const wsLink = new WebSocketLink({
+export const wsLink = new WebSocketLink({
   uri: `ws://localhost:3000/graphql`,
   options: {
     reconnect: true,
+    lazy: true,
     connectionParams: {
       token: localStorage.getItem('token'),
     },

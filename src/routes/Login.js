@@ -10,6 +10,8 @@ import {
   Message,
 } from 'semantic-ui-react';
 
+import { wsLink } from '../apollo';
+
 const USER_LOGIN = gql`
   mutation($email: String!, $password: String!) {
     login(email: $email, password: $password) {
@@ -40,6 +42,7 @@ export default function Login(props) {
     const { ok, token, errors } = response.data.login;
     if (ok) {
       localStorage.setItem('token', token);
+      wsLink.subscriptionClient.tryReconnect();
       props.history.push('/view-team');
     } else {
       const sortedErrors = errors.reduce(

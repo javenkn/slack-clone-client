@@ -8,10 +8,23 @@ import FileUpload from './FileUpload';
 import { CREATE_FILE_MESSAGE } from '../graphql/fileMessage';
 
 const Wrapper = styled.div`
-  margin: 0 20px;
+  margin: 0 20px 20px;
   display: grid;
   grid-template-columns: auto 5fr;
-  padding-bottom: 20px;
+  border: 2px solid rgba(134, 134, 134, 0.7);
+  border-radius: 6px;
+`;
+
+const StyledButton = styled(Button)`
+  background: none !important;
+  border-radius: 0 !important;
+  border-right: 2px solid rgba(134, 134, 134, 0.7) !important;
+`;
+
+const StyledInput = styled(Input)`
+  > input {
+    border: 0 !important;
+  }
 `;
 
 const ENTER_KEY = 13;
@@ -36,13 +49,13 @@ export default function SendMessage({ channelId, placeholder, onSend }) {
           <Mutation mutation={CREATE_FILE_MESSAGE}>
             {(createMessage, { data }) => (
               <FileUpload channelId={channelId} createMessage={createMessage}>
-                <Button icon>
+                <StyledButton icon>
                   <Icon name='plus' />
-                </Button>
+                </StyledButton>
               </FileUpload>
             )}
           </Mutation>
-          <Input
+          <StyledInput
             name='message'
             placeholder={`Message #${placeholder}`}
             value={values.message}

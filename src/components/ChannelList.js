@@ -53,6 +53,8 @@ const SectionWrapper = styled.section`
 `;
 
 const ListItemWrapper = styled.li`
+  display: flex;
+  align-items: center;
   cursor: pointer;
   color: rgba(193, 197, 202, 0.64);
   &:hover {
@@ -60,10 +62,10 @@ const ListItemWrapper = styled.li`
   }
 `;
 
-const DirectMessage = ({ id, name, teamId }) => (
+const DirectMessage = ({ id, name, teamId, groupLength }) => (
   <Link to={`/view-team/${teamId}/${id}`}>
     <ListItemWrapper>
-      <Bubble /> {name}
+      <Bubble groupLength={groupLength} /> {name}
     </ListItemWrapper>
   </Link>
 );
@@ -116,7 +118,12 @@ export default function ChannelList({
             <Icon name='add circle' onClick={handleDirectMessage} />
           </SectionTitle>
           {directMessages.map((message, i) => (
-            <DirectMessage key={`channel-${i}`} {...message} teamId={teamId} />
+            <DirectMessage
+              key={`channel-${i}`}
+              {...message}
+              groupLength={message.name.split(',').length}
+              teamId={teamId}
+            />
           ))}
         </ul>
       </SectionWrapper>

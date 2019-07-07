@@ -23,10 +23,9 @@ const MESSAGES_SUBSCRIPTION = gql`
 `;
 
 const fileUploadStyles = {
-  gridColumn: 3,
-  gridRow: 2,
-  overflowY: 'auto',
+  overflowY: 'overlay',
   display: 'flex',
+  flex: 1,
   flexDirection: 'column-reverse',
   padding: '0 20px 20px',
 };
@@ -97,9 +96,6 @@ export default function MessageContainer({
       setReceivedNewMessage(false);
     }
   }, [messages]);
-
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error :(</p>;
   return (
     <Mutation mutation={CREATE_FILE_MESSAGE}>
       {(createMessage, { data }) => (
@@ -108,6 +104,7 @@ export default function MessageContainer({
             noClick
             createMessage={createMessage}
             channelId={channelId}
+            style={{ outline: 0 }}
           >
             <Comment.Group>
               {[...messages].reverse().map(message => (

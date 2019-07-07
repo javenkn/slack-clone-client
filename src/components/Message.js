@@ -22,13 +22,16 @@ const MessageType = ({ url, text, fileType }) => {
 };
 
 export default function Message({ username, createdAt, ...message }) {
+  const createdAtTime = new Date(createdAt).toLocaleTimeString();
   return (
     <Comment>
       <Comment.Avatar src='https://react.semantic-ui.com/images/avatar/small/matt.jpg' />
       <Comment.Content>
         <Comment.Author as='a'>{username}</Comment.Author>
         <Comment.Metadata>
-          <div>Today at {createdAt}</div>
+          <div>{`${createdAtTime.slice(0, -6)} ${createdAtTime.slice(
+            -2,
+          )}`}</div>
         </Comment.Metadata>
         <MessageType {...message} />
         <Comment.Actions>

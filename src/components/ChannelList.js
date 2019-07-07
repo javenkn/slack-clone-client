@@ -5,11 +5,29 @@ import { Icon } from 'semantic-ui-react';
 
 import Bubble from './Bubble';
 
+const SectionTitle = styled.li`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  div {
+    width: 100%;
+  }
+  div,
+  i {
+    :hover {
+      color: #fff;
+    }
+  }
+`;
+
 const Wrapper = styled.div`
   grid-column: 2;
   grid-row: 1/4;
   background-color: #4e3a4c;
   color: rgba(193, 197, 202, 0.64);
+  padding: 10px 0;
+  overflow-y: overlay;
 `;
 
 const paddingStyle = `padding: 4px 12px 4px 15px;`;
@@ -35,6 +53,8 @@ const SectionWrapper = styled.section`
 `;
 
 const ListItemWrapper = styled.li`
+  cursor: pointer;
+  color: rgba(193, 197, 202, 0.64);
   &:hover {
     background: #3e313c;
   }
@@ -49,7 +69,7 @@ const DirectMessage = ({ id, name, teamId }) => (
 );
 const Channel = ({ teamId, id, name }) => (
   <Link to={`/view-team/${teamId}/${id}`}>
-    <ListItemWrapper>#{name}</ListItemWrapper>
+    <ListItemWrapper># {name}</ListItemWrapper>
   </Link>
 );
 
@@ -74,21 +94,27 @@ export default function ChannelList({
       </SectionWrapper>
       <SectionWrapper>
         <ul>
-          <li>
-            Channels{' '}
+          <SectionTitle>
+            <div>Channels </div>
             {isAdmin && <Icon name='add circle' onClick={handleAddChannel} />}
-          </li>
+          </SectionTitle>
           {channels.map((channel, i) => (
             <Channel key={`channel-${i}`} {...channel} teamId={teamId} />
           ))}
         </ul>
+        <ListItemWrapper
+          style={{ padding: '4px 12px 4px 15px', listStyle: 'none' }}
+          onClick={handleAddChannel}
+        >
+          + Add a channel{' '}
+        </ListItemWrapper>
       </SectionWrapper>
       <SectionWrapper>
         <ul>
-          <li>
-            Direct Messages{' '}
+          <SectionTitle>
+            <div>Direct Messages </div>
             <Icon name='add circle' onClick={handleDirectMessage} />
-          </li>
+          </SectionTitle>
           {directMessages.map((message, i) => (
             <DirectMessage key={`channel-${i}`} {...message} teamId={teamId} />
           ))}
@@ -97,7 +123,11 @@ export default function ChannelList({
       <SectionWrapper>
         {isAdmin && (
           <a href='#invite-people' onClick={handleInvitePeople}>
-            + Invite People
+            <ListItemWrapper
+              style={{ padding: '4px 12px 4px 15px', listStyle: 'none' }}
+            >
+              + Invite People
+            </ListItemWrapper>
           </a>
         )}
       </SectionWrapper>

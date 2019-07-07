@@ -11,12 +11,19 @@ import MessageContainer from '../containers/Message';
 
 import Header from '../components/Header';
 import SendMessage from '../components/SendMessage';
+import useWindowHeight from '../hooks/useWindowHeight';
 
 const Layout = styled.div`
   display: grid;
   height: 100vh;
   grid-template-columns: 100px 250px 1fr;
   grid-template-rows: auto 1fr auto;
+`;
+
+const MainContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: ${props => props.height}px;
 `;
 
 const GET_MESSAGES = gql`
@@ -45,6 +52,7 @@ export default function ViewTeam({
     params: { teamId, channelId },
   },
 }) {
+  const height = useWindowHeight();
   return (
     <Query query={meQuery} fetchPolicy='network-only'>
       {({ loading, error, data: { me } }) => {
@@ -89,32 +97,34 @@ export default function ViewTeam({
               username={username}
               currentUserId={id}
             />
-            <Header channelName={currentChannel.name} />
-            <Query
-              query={GET_MESSAGES}
-              variables={{ channelId: currentChannel.id }}
-              fetchPolicy='network-only'
-            >
-              {queryProps => (
-                <MessageContainer
-                  {...queryProps}
-                  channelId={currentChannel.id}
-                />
-              )}
-            </Query>
-            <Mutation mutation={CREATE_MESSAGE}>
-              {(createMessage, { data }) => (
-                <SendMessage
-                  channelId={currentChannel.id}
-                  placeholder={currentChannel.name}
-                  onSend={async text =>
-                    await createMessage({
-                      variables: { text, channelId: currentChannel.id },
-                    })
-                  }
-                />
-              )}
-            </Mutation>
+            <MainContainer height={height}>
+              <Header channelName={currentChannel.name} />
+              <Query
+                query={GET_MESSAGES}
+                variables={{ channelId: currentChannel.id }}
+                fetchPolicy='network-only'
+              >
+                {queryProps => (
+                  <MessageContainer
+                    {...queryProps}
+                    channelId={currentChannel.id}
+                  />
+                )}
+              </Query>
+              <Mutation mutation={CREATE_MESSAGE}>
+                {(createMessage, { data }) => (
+                  <SendMessage
+                    channelId={currentChannel.id}
+                    placeholder={currentChannel.name}
+                    onSend={async text =>
+                      await createMessage({
+                        variables: { text, channelId: currentChannel.id },
+                      })
+                    }
+                  />
+                )}
+              </Mutation>
+            </MainContainer>
           </Layout>
         );
       }}

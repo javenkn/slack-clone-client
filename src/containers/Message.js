@@ -25,10 +25,10 @@ const MESSAGES_SUBSCRIPTION = gql`
 const fileUploadStyles = {
   gridColumn: 3,
   gridRow: 2,
-  paddingLeft: '20px',
   overflowY: 'auto',
   display: 'flex',
   flexDirection: 'column-reverse',
+  padding: '0 20px 20px',
 };
 
 export default function MessageContainer({

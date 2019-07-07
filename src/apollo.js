@@ -1,14 +1,15 @@
 import { split } from 'apollo-link';
-// import { HttpLink } from 'apollo-link-http';
 import { WebSocketLink } from 'apollo-link-ws';
 import { getMainDefinition } from 'apollo-utilities';
 import { createUploadLink } from 'apollo-upload-client';
 
-const fileLink = createUploadLink({ uri: 'http://localhost:3000/graphql' });
+const fileLink = createUploadLink({
+  uri: `http://${process.env.REACT_APP_SERVER_URL}/graphql`,
+});
 
 // Create a WebSocket link:
 export const wsLink = new WebSocketLink({
-  uri: `ws://localhost:3000/graphql`,
+  uri: `ws://${process.env.REACT_APP_SERVER_URL}/graphql`,
   options: {
     reconnect: true,
     lazy: true,

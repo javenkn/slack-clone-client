@@ -1,14 +1,10 @@
 import React, { useState } from 'react';
 import { Mutation } from 'react-apollo';
 import { gql } from 'apollo-boost';
-import {
-  Container,
-  Header,
-  Form,
-  Input,
-  Button,
-  Message,
-} from 'semantic-ui-react';
+import { Header, Form, Input, Button, Message } from 'semantic-ui-react';
+
+import HomeLayout from '../components/HomeLayout';
+import { FormButton } from './Register';
 
 const CREATE_TEAM = gql`
   mutation($name: String!) {
@@ -62,7 +58,7 @@ export default function CreateTeam(props) {
   return (
     <Mutation mutation={CREATE_TEAM}>
       {(createTeam, { data }) => (
-        <Container>
+        <HomeLayout>
           <Header as='h2'>Create a Team</Header>
           <Form>
             <Form.Field error={!!nameError}>
@@ -73,7 +69,13 @@ export default function CreateTeam(props) {
                 fluid
               />
             </Form.Field>
-            <Button onClick={e => onSubmit(e, createTeam)}>Submit</Button>
+            <FormButton
+              onClick={e => onSubmit(e, createTeam)}
+              fluid
+              size='large'
+            >
+              Create
+            </FormButton>
           </Form>
           {nameError ? (
             <Message
@@ -82,7 +84,7 @@ export default function CreateTeam(props) {
               list={Object.values(validatedErrors)}
             />
           ) : null}
-        </Container>
+        </HomeLayout>
       )}
     </Mutation>
   );

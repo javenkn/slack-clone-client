@@ -1,14 +1,17 @@
 import React, { useState } from 'react';
-import {
-  Container,
-  Header,
-  Form,
-  Input,
-  Button,
-  Message,
-} from 'semantic-ui-react';
+import styled from 'styled-components';
+import { Header, Form, Input, Button, Message } from 'semantic-ui-react';
 import { Mutation } from 'react-apollo';
 import { gql } from 'apollo-boost';
+
+import HomeLayout from '../components/HomeLayout';
+
+export const FormButton = styled(Button)`
+  &&& {
+    background: #007a5a;
+    color: #fff;
+  }
+`;
 
 const REGISTER_USER = gql`
   mutation($username: String!, $email: String!, $password: String!) {
@@ -56,8 +59,10 @@ export default function Register(props) {
   return (
     <Mutation mutation={REGISTER_USER}>
       {(register, { data }) => (
-        <Container>
-          <Header as='h2'>Register</Header>
+        <HomeLayout history={props.history}>
+          <Header as='h2' textAlign='left'>
+            Register
+          </Header>
           <Form>
             <Form.Field error={!!usernameError}>
               <Input
@@ -84,7 +89,9 @@ export default function Register(props) {
                 fluid
               />
             </Form.Field>
-            <Button onClick={e => onSubmit(e, register)}>Submit</Button>
+            <FormButton onClick={e => onSubmit(e, register)} fluid size='large'>
+              Submit
+            </FormButton>
           </Form>
           {usernameError || emailError || passwordError ? (
             <Message
@@ -93,7 +100,7 @@ export default function Register(props) {
               list={Object.values(validatedErrors)}
             />
           ) : null}
-        </Container>
+        </HomeLayout>
       )}
     </Mutation>
   );

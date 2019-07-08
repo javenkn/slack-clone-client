@@ -69,9 +69,11 @@ const DirectMessage = ({ id, name, teamId, groupLength }) => (
     </ListItemWrapper>
   </Link>
 );
-const Channel = ({ teamId, id, name }) => (
+const Channel = ({ teamId, id, name, isPublic }) => (
   <Link to={`/view-team/${teamId}/${id}`}>
-    <ListItemWrapper># {name}</ListItemWrapper>
+    <ListItemWrapper>
+      {isPublic ? '#' : <Icon name='lock' size='small' />} {name}
+    </ListItemWrapper>
   </Link>
 );
 
@@ -101,7 +103,12 @@ export default function ChannelList({
             {isAdmin && <Icon name='add circle' onClick={handleAddChannel} />}
           </SectionTitle>
           {channels.map((channel, i) => (
-            <Channel key={`channel-${i}`} {...channel} teamId={teamId} />
+            <Channel
+              key={`channel-${i}`}
+              {...channel}
+              isPublic={channel.public}
+              teamId={teamId}
+            />
           ))}
         </ul>
         <ListItemWrapper

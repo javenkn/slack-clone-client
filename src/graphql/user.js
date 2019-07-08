@@ -12,6 +12,7 @@ export const meQuery = gql`
           id
           name
           dm
+          public
         }
         admin
         directMessageMembers {

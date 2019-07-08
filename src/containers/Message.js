@@ -14,6 +14,7 @@ const MESSAGES_SUBSCRIPTION = gql`
       text
       user {
         username
+        color
       }
       createdAt
       url
@@ -72,6 +73,7 @@ export default function MessageContainer({
   };
   useEffect(() => {
     // subscribeToMore returns an unsubsribe function
+    console.log('hello', channelId);
     const unsubscribe = subscribeToMore({
       document: MESSAGES_SUBSCRIPTION,
       variables: { channelId },
@@ -111,6 +113,7 @@ export default function MessageContainer({
                 <Message
                   key={`message-${message.id}`}
                   username={message.user.username}
+                  color={message.user.color}
                   {...message}
                 />
               ))}

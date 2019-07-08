@@ -33,6 +33,7 @@ const GET_MESSAGES = gql`
       text
       user {
         username
+        color
       }
       createdAt
       url

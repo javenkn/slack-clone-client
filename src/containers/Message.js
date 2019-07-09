@@ -73,7 +73,6 @@ export default function MessageContainer({
   };
   useEffect(() => {
     // subscribeToMore returns an unsubsribe function
-    console.log('hello', channelId);
     const unsubscribe = subscribeToMore({
       document: MESSAGES_SUBSCRIPTION,
       variables: { channelId },

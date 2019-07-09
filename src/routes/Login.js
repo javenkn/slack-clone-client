@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { Mutation } from 'react-apollo';
 import { gql } from 'apollo-boost';
 import {
@@ -97,6 +98,10 @@ export default function Login(props) {
                 Continue
                 <Icon name='right arrow' />
               </FormButton>
+              <p>
+                Don't have an account?{' '}
+                <Link to='/register'>Register here.</Link>
+              </p>
             </Form>
             {emailError || passwordError ? (
               <Message

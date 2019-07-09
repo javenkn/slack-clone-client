@@ -57,9 +57,8 @@ export default function ViewTeam({
   return (
     <Query query={meQuery} fetchPolicy='network-only'>
       {({ loading, error, data: { me } }) => {
-        if (!loading && !me) return <Redirect to='/login' />;
+        if (error) return <Redirect to='/login' />;
         if (loading) return <p>Loading...</p>;
-        if (error) return <p>Error :(</p>;
 
         // all of the user's teams
         const { id, teams, username } = me;

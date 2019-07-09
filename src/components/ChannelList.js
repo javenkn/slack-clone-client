@@ -124,14 +124,21 @@ export default function ChannelList({
             <div>Direct Messages </div>
             <Icon name='add circle' onClick={handleDirectMessage} />
           </SectionTitle>
-          {directMessages.map((message, i) => (
-            <DirectMessage
-              key={`channel-${i}`}
-              {...message}
-              groupLength={message.name.split(',').length}
-              teamId={teamId}
-            />
-          ))}
+          {directMessages.map((message, i) => {
+            const newDMName = message.name
+              .split(', ')
+              .filter(member => member !== username)
+              .join(', ');
+            return (
+              <DirectMessage
+                key={`channel-${i}`}
+                {...message}
+                name={newDMName}
+                groupLength={newDMName.split(', ').length}
+                teamId={teamId}
+              />
+            );
+          })}
         </ul>
       </SectionWrapper>
       <SectionWrapper>

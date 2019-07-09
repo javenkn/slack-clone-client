@@ -23,13 +23,14 @@ const StyledButton = styled(Button)`
 
 const StyledInput = styled(Input)`
   > input {
+    padding: 0 8px !important;
     border: 0 !important;
   }
 `;
 
 const ENTER_KEY = 13;
 
-export default function SendMessage({ channelId, placeholder, onSend }) {
+export default function SendMessage({ channelId, isDm, placeholder, onSend }) {
   return (
     <Formik
       initialValues={{ message: '' }}
@@ -57,7 +58,7 @@ export default function SendMessage({ channelId, placeholder, onSend }) {
           </Mutation>
           <StyledInput
             name='message'
-            placeholder={`Message #${placeholder}`}
+            placeholder={`Message ${isDm ? '' : '#'}${placeholder}`}
             value={values.message}
             onChange={handleChange}
             onBlur={handleBlur}

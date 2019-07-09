@@ -88,7 +88,7 @@ export default function MessageContainer({
       },
     });
     return () => unsubscribe();
-  }, [channelId]);
+  }, [channelId, subscribeToMore]);
 
   useEffect(() => {
     if (receivedNewMessage) {
@@ -97,7 +97,7 @@ export default function MessageContainer({
       // reset new message state
       setReceivedNewMessage(false);
     }
-  }, [messages]);
+  }, [messages, receivedNewMessage]);
   return (
     <Mutation mutation={CREATE_FILE_MESSAGE}>
       {(createMessage, { data }) => (

@@ -15,7 +15,7 @@ export default function FileUpload({
         variables: { channelId, file },
       });
     },
-    [createMessage],
+    [createMessage, channelId],
   );
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,

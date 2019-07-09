@@ -8,6 +8,11 @@ const Wrapper = styled.div`
   box-shadow: inset 0px -1px 0 0 #ddd;
 `;
 
-export default function Header({ channelName }) {
-  return <Wrapper>#{channelName}</Wrapper>;
+export default function Header({ isDm, channelName }) {
+  return (
+    <Wrapper>
+      {isDm ? '' : '#'}
+      {channelName}
+    </Wrapper>
+  );
 }

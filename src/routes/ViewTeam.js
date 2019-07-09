@@ -57,6 +57,7 @@ export default function ViewTeam({
   return (
     <Query query={meQuery} fetchPolicy='network-only'>
       {({ loading, error, data: { me } }) => {
+        if (!loading && !me) return <Redirect to='/login' />;
         if (loading) return <p>Loading...</p>;
         if (error) return <p>Error :(</p>;
 
@@ -87,6 +88,14 @@ export default function ViewTeam({
           );
         }
 
+        let channelName = currentChannel.name;
+        if (currentChannel.dm) {
+          channelName = currentChannel.name
+            .split(', ')
+            .filter(member => member !== username)
+            .join(', ');
+        }
+
         return (
           <Layout>
             <Sidebar
@@ -99,7 +108,7 @@ export default function ViewTeam({
               currentUserId={id}
             />
             <MainContainer height={height}>
-              <Header channelName={currentChannel.name} />
+              <Header isDm={currentChannel.dm} channelName={channelName} />
               <Query
                 query={GET_MESSAGES}
                 variables={{ channelId: currentChannel.id }}
@@ -115,8 +124,9 @@ export default function ViewTeam({
               <Mutation mutation={CREATE_MESSAGE}>
                 {(createMessage, { data }) => (
                   <SendMessage
+                    isDm={currentChannel.dm}
                     channelId={currentChannel.id}
-                    placeholder={currentChannel.name}
+                    placeholder={channelName}
                     onSend={async text =>
                       await createMessage({
                         variables: { text, channelId: currentChannel.id },
